@@ -1,10 +1,8 @@
 #!/bin/bash
 
-echo "Hello what is ur name?"
-read name
-
-echo "Hello $name"
-
-current_time=$(date)
-
-echo "The current time is $current_time"
+trigger=1.00 
+load=`cat /proc/loadavg | awk '{print $1}'` 
+response=`echo | awk -v T=$trigger -v L=$load 'BEGIN{if ( L > T){ print "greater"}}'` 
+if [[ $response = "greater" ]] 
+then sar -q | mail -s"High load on server - [ $load ]" pgowda@student.unimelb.edu.au 
+fi
